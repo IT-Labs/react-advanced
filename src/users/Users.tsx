@@ -1,16 +1,21 @@
-import React from 'react';
-import { getUsers } from '../Apis/UsersApi.tsx';
+import React, { useState, useEffect } from 'react';
+import { getUsers, User } from '../Apis/UsersApi';
 import useStyles from './Users.styels';
-import UsersList from './UsersList.tsx';
-import Sidebar from '../sidebar/Sidebar.tsx';
-import useSearch from './useSearch.tsx';
+import UsersList from './UsersList';
+import UsersSidebar from './UsersSidebar';
+import { Button } from '@mui/material';
+import withSidebar from './withSidebar';
+import RenderPropsSidebar from './RenderPropsSidebar';
+import { usePermissions } from 'Permissions';
+import useLoadData from './useLoadData';
 
 interface UsersProps {
   
 }
 
 const Users: React.FC<UsersProps> = () => {
-  const [isLoading, data ] = useSearch(getUsers, []);
+  const { isLoading, data } = useLoadData({ loadApi: getUsers });
+  const { canAdd } = usePermissions();
 
   const classes = useStyles();
 
@@ -19,18 +24,31 @@ const Users: React.FC<UsersProps> = () => {
       {'Loading....'}
     </div>;
   }
-  //const WithSidebarHOC = withSidebar(UsersList, { data: users });
+
+  // const WithSidebarHOC = withSidebar(UsersList, { users: data });
+  // return <WithSidebarHOC />
+
   return (
-    <div className={classes.container}>
-      <Sidebar>
-        {(isOpen, toggleSidebar, search) => {
+    <RenderPropsSidebar>
+      {(isOpen, toggleSidebar, search) => {
           const filteredUsers = data.filter(u => u.name.includes(search) || u.email.includes(search));
-          return (<UsersList users={filteredUsers} isOpen={isOpen} openSidebar={toggleSidebar}>
-            </UsersList>)
-        }}
-      </Sidebar>
-    </div>
-  );
+          return (
+            <>
+              <UsersList users={filteredUsers} isOpen={isOpen as boolean} openSidebar={toggleSidebar as () => void} />
+              {canAdd && <Button>Add more</Button>}
+            </>
+          )
+      }}
+    </RenderPropsSidebar>
+  )
+
+  // return (
+  //   <div className={classes.container}>
+  //     {isOpen && <UsersSidebar closeSidebar={toggleSidebar} search={search} setSearch={setSearch} />}
+  //     <UsersList users={filteredUsers} isOpen={isOpen} openSidebar={toggleSidebar}/>
+  //     <Button onClick={addMore}>Add more</Button>
+  //   </div>
+  // );
 }
 
 export default Users;

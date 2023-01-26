@@ -1,11 +1,17 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext } from 'react';
 
-export const permissionsContext = createContext({
-  value: {}
-});
+interface ContextProps {
+  canEdit: boolean;
+  canAdd: boolean;
+}
 
+export const defaultValue = {
+  canEdit: true,
+  canAdd: true,
+}
 
-export const PermisssionsProvider = permissionsContext.Provider;
+const PermissionsContext = createContext<ContextProps>(defaultValue);
 
-export const usePermissions = () => useContext(permissionsContext);
+export const PermissionsProvider = PermissionsContext.Provider;
 
+export const usePermissions = () => useContext(PermissionsContext);

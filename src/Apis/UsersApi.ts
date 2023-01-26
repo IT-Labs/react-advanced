@@ -7,7 +7,7 @@ export interface User {
   email: string;
 }
 
-export const getUsers = (): Promise<User> => {
+export const getUsers = (): Promise<User[]> => {
   const url = 'http://localhost:5000/users'
   return new Promise((resolve, reject) => fetch(url, {
     method: 'GET'

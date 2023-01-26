@@ -7,7 +7,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     width: '170px',
-    background: 'lightgray'
+    backgroundColor: 'lightblue'
   },
   button: {
     display: 'flex',
@@ -26,7 +26,7 @@ const UsersSidebar: React.FC<UsersSidebarProps> = ({ closeSidebar, setSearch, se
 
   return (<div className={classes.container}>
     <div className={classes.button}>
-      <Button  onClick={() => closeSidebar()}>X</Button>
+      <Button onClick={() => closeSidebar()}>X</Button>
     </div>
     <TextField label="search" value={search} onChange={(e) => setSearch(e.target.value)} />
   </div>);

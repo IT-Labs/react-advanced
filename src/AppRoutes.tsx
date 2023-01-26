@@ -4,8 +4,8 @@ import {
   Route,
   Navigate
 } from "react-router-dom";
-import Products from './products/Products.tsx';
-import Users from './users/Users.tsx';
+import Products from './products/Products';
+import Users from './users/Users';
 
 const AppRoutes = () => {
   return (

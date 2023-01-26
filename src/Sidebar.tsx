@@ -2,6 +2,7 @@ import React from 'react';
 import { ListItem, Link as MuiLink } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import { makeStyles } from "@material-ui/styles";
+import { usePermissions } from 'Permissions';
 
 
 const useStyles = makeStyles(() => ({
@@ -27,20 +28,23 @@ const items: Items[] = [{
   link: '/products'
 }]
 
-const Sidebar = () => {
+const Sidebar: React.FC<{}> = () => {
+  const { canAdd } = usePermissions();
+
   const location = useLocation();
   const classes = useStyles();
-  return (
-    items.map(({ title, link}) => {
+  return (<>
+    {items.map(({ title, link}) => {
       const isActive = link === location.pathname;
       return (
         <ListItem key={title} className={isActive ? classes.selectedItem : classes.item}>
           <MuiLink underline="none" component={Link} to={link}>
-            {title}
+            {canAdd ? `${title} Can Add` : title}
           </MuiLink>
         </ListItem>
       );
-    })
+    })}
+    </>
   )
 };
 

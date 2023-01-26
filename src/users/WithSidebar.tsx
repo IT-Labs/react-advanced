@@ -1,17 +1,26 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
+import { User } from 'Apis/UsersApi';
+import { TextField, Button } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
-import { Button, TextField } from '@mui/material';
+
+interface Props {
+  users: User[]
+}
+
+interface ComponentProps extends Props { 
+  isOpen: boolean;
+  openSidebar: () => void;
+}
 
 const useStyles = makeStyles(() => ({
   container: {
     display: 'flex',
-    flexDirection: 'row',
   },
-  sidebar: {
+  sideBarContainer: {
     display: 'flex',
-    width: '170px',
     flexDirection: 'column',
-    background: 'lightgray'
+    width: '170px',
+    backgroundColor: 'lightblue'
   },
   button: {
     display: 'flex',
@@ -19,30 +28,34 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const withSidebar = (Component, { data }) => {
+const withSidebar = (Component: React.ComponentType<ComponentProps>, { users }: Props) => {
+  const displayName = 'withSidebarHOC';
+
   const WithSidebar = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen ,setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
+    const classes = useStyles();
 
     const toggleSidebar = useCallback(() => {
-      setIsOpen(prevState => !prevState);
+      setIsOpen((prevState) => !prevState);
     }, []);
-
-    const classes = useStyles();
-    const filteredUsers = useMemo(() => data.filter((u) => u.name.includes(search) || u.email.includes(search)), [search]);
-    return (<div className={classes.container}>
-      {isOpen && (
-        <div className={classes.sidebar}>
+    
+  const filteredUsers = users.filter((u) => u.email.includes(search) || u.name.includes(search));
+  
+    return (
+      <div className={classes.container}>
+        {isOpen && <div className={classes.sideBarContainer}>
           <div className={classes.button}>
-            <Button  onClick={() => toggleSidebar()}>X</Button>
+            <Button onClick={() => toggleSidebar()}>X</Button>
           </div>
           <TextField label="search" value={search} onChange={(e) => setSearch(e.target.value)} />
-        </div>
-      )}
-      <Component users={filteredUsers} isOpen={isOpen} openSidebar={toggleSidebar} />
-    </div>);
-  }
+        </div>}
+        <Component isOpen={isOpen} openSidebar={toggleSidebar} users={filteredUsers} />
+      </div>
+    );
+  };
 
+  WithSidebar.displayName = displayName;
   return WithSidebar;
 }
 
