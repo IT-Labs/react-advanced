@@ -34,7 +34,7 @@ const Users: React.FC<UsersProps> = () => {
           const filteredUsers = data.filter(u => u.name.includes(search) || u.email.includes(search));
           return (
             <>
-              <UsersList users={filteredUsers} isOpen={isOpen as boolean} openSidebar={toggleSidebar as () => void} />
+              <UsersList users={filteredUsers} isOpen={isOpen} openSidebar={toggleSidebar} />
               {canAdd && <Button>Add more</Button>}
             </>
           )

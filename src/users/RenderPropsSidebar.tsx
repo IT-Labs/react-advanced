@@ -18,7 +18,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const RenderPropsSidebar = ({ children }) => {
+interface SidebarProps {
+  children(isOpen: boolean, toggleSidebar: () => void, search: string)
+}
+
+const RenderPropsSidebar: React.FC<SidebarProps> = ({ children }) => {
   const [isOpen ,setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const classes = useStyles();
